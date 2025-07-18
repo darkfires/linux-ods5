@@ -731,8 +731,11 @@ static int ods5_fill_super(struct super_block *sb, void *data, int silent)
 	for (sb->s_blocksize_bits = ODS5_BLOCK_SHIFT;
 	     (1U << sb->s_blocksize_bits) < sb->s_blocksize;
 	     sb->s_blocksize_bits++) ;
-	if (sb->s_blocksize_bits != ODS5_BLOCK_SHIFT)
+
+	if (sb->s_blocksize_bits != ODS5_BLOCK_SHIFT) {
 		ods5_debug(2, "s_blocksize_bits: %d\n", sb->s_blocksize_bits);
+	}
+
 	sb_info->ioshifts = sb->s_blocksize_bits - ODS5_BLOCK_SHIFT;
 	sb_info->ioblocks = 1U << sb_info->ioshifts;
 
