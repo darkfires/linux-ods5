@@ -80,6 +80,8 @@ typedef struct ods5_fh_info {
 	struct ods5_ext_info ext;
 } _ODS5_FH_INFO;
 
+const char * ods5_get_link(struct dentry *d, struct inode *inode, struct delayed_call *done);
+int ods5_readlink(struct dentry *dentry, char __user *buffer, int buflen);
 int ods5_isl_to_utf(unsigned char *utf8, unsigned int utf8len, unsigned char *name, vms_byte namelen);
 int is_valid_home(struct ods5_home * home) ;
 int is_used_fh2(struct ods5_fh2 * fh2, struct ods5_fid fid) ;

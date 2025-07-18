@@ -187,8 +187,9 @@ static struct ods5_fid *ods5_find_match(char block[ODS5_BLOCK_SIZE],
 		} else {
 			ods5_debug(2, "%s", "utf8, ucs2_fn\n");
 			for (i=0; i<fl; i++) {
-				if (ucs2_fn[i])
+				if (ucs2_fn[i]) {
 					ods5_debug(2, " [%d]: 0x%x\n", i, ucs2_fn[i]);
+				}
 			}
 		}
 	} else {
@@ -208,12 +209,13 @@ static struct ods5_fid *ods5_find_match(char block[ODS5_BLOCK_SIZE],
 			fl = escfn_to_ucs(ucs2_fn, fname, fl);
 			ods5_debug(2, "%s", "vtf8, ucs2_fn\n");
 			for (i=0; i<fl; i++) {
-				if (ucs2_fn[i])
+				if (ucs2_fn[i]) {
 					ods5_debug(2, " [%d]: 0x%x\n", i, ucs2_fn[i]);
+				}
 			}
-		}
-		else
+		} else {
 			ods5_debug(2, "vtf8, upper_fn: %.*s\n", fl, upper_fn);
+		}
 	}
 
 	/* walk through all the records, stop if record length is 0xffff */
@@ -231,9 +233,9 @@ static struct ods5_fid *ods5_find_match(char block[ODS5_BLOCK_SIZE],
 			    case ucs2:
 				break;
 			}
-		}
-		else
+		} else {
 			ods5_debug(2, "name: %.*s\n", dir->namecount, dir->name);
+		}
 
 		/*
 		 * For isl-1 names,
