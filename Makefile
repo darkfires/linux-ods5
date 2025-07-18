@@ -11,3 +11,6 @@ default:
 	$(MAKE) -C $(KDIR) M=$$PWD
 
 endif
+
+clean:
+	rm -f *.o *.ko
