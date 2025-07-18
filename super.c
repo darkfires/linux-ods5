@@ -28,6 +28,7 @@
 #include <linux/seq_file.h>
 #include <linux/slab.h>
 #include <linux/statfs.h>
+#include <linux/version.h>
 
 #if defined(DEBUG) && defined(CONFIG_SYSCTL)
 # include <linux/proc_fs.h>
@@ -316,19 +317,34 @@ void ods5_read_inode(struct inode *inode)
 	if (sb_info->utf8 && S_ISLNK(inode->i_mode))
 		inode->i_size = adjust_size(inode);
 	if (fh2->idoffset == 0) {
+#if LINUX_VERSION_CODE <= KERNEL_VERSION(6,7,0)
 		inode->i_mtime = inode->i_atime = inode_set_ctime_current(inode);
+#else
+		inode_set_mtime_to_ts(inode, inode_set_ctime_current(inode));
+		inode_set_atime_to_ts(inode, inode_set_ctime_current(inode));
+#endif
 		GOOD_RETURN;
 	}
 	if ((fh2->struclev >> 8) == 2) {
 		fi2 = (struct ods5_fi2 *)&((vms_word *) fh2)[fh2->idoffset];
 		inode_set_ctime_to_ts(inode, v2utime(fi2->credate));
+#if LINUX_VERSION_CODE <= KERNEL_VERSION(6,7,0)
 		inode->i_mtime = inode->i_atime = v2utime(fi2->revdate);
+#else
+		inode_set_mtime_to_ts(inode, v2utime(fi2->credate));
+		inode_set_atime_to_ts(inode, v2utime(fi2->revdate));
+#endif
 		set_nlink(inode,1);
 	} else { /* ((fh2->struclev >> 8) == 5) */
 		fi5 = (struct ods5_fi5 *)&((vms_word *) fh2)[fh2->idoffset];
 		inode_set_ctime_to_ts(inode, v2utime(fi5->attdate));
+#if LINUX_VERSION_CODE <= KERNEL_VERSION(6,7,0)
 		inode->i_mtime = v2utime(fi5->revdate);
 		inode->i_atime = v2utime(fi5->accdate);
+#else
+		inode_set_mtime_to_ts(inode, v2utime(fi5->revdate));
+		inode_set_atime_to_ts(inode, v2utime(fi5->accdate));
+#endif
 		set_nlink(inode,(sb_info->volchar /* & ODS5_VOL_HARDLINKS */)? fh2->linkcount: 1);
 	}
 
